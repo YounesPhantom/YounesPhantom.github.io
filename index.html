@@ -11,11 +11,45 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         video {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+        #popup-text, #second-popup-text {
+            position: absolute;
+            color: white;
+            font-size: 1.5em;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            opacity: 0;
+            display: none;
+        }
+        #popup-text {
+            top: 30%;
+        }
+        #second-popup-text {
+            top: 50%;
+        }
+        #popup-title {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        @keyframes popup {
+            0% { opacity: 0; transform: scale(0.5); }
+            20% { opacity: 1; transform: scale(1.2); }
+            80% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1); }
+        }
+        @keyframes secondPopup {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
@@ -24,9 +58,32 @@
         <source src="rickroll.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
+    <div id="popup-text">
+        <div id="popup-title">APRIL'S FOOLS!</div>
+        Looks like you just got fooled :D
+    </div>
+    <div id="second-popup-text">Enjoy the music, the real link will arrive shortly</div>
     <script>
         window.addEventListener('load', function() {
             var video = document.getElementById('video');
+            var popupText = document.getElementById('popup-text');
+            var secondPopupText = document.getElementById('second-popup-text');
+
+            video.addEventListener('play', function() {
+                popupText.style.display = 'block';
+                popupText.style.animation = 'popup 5s ease-in-out forwards';
+                setTimeout(function() {
+                    secondPopupText.style.display = 'block';
+                    secondPopupText.style.animation = 'secondPopup 5s ease-in-out forwards';
+                    setTimeout(function() {
+                        secondPopupText.style.display = 'none';
+                    }, 5000);
+                }, 3000);
+                setTimeout(function() {
+                    popupText.style.display = 'none';
+                }, 5000);
+            });
+
             video.play().catch(function(error) {
                 console.error('Autoplay was prevented:', error);
             });
